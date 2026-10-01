@@ -1,0 +1,52 @@
+# No-telemetry fork: every host literal found in runtime code, reviewed once.
+# Format: <host>  <category>  <why it is acceptable>
+# Categories:
+#   inference  built-in LLM provider preset; contacted only when the user selects it
+#   disabled   code path neutralised by a fork patch
+#   install    user-initiated install/download, never at review runtime
+#   text       appears only in comments, docs links, help text or output metadata
+# verify.sh fails on any host not listed here. Audit before adding one.
+
+api.anthropic.com                       inference  preset / default base URL
+api.deepseek.com                        inference  preset
+api.edenai.run                          inference  preset
+api.lkeap.cloud.tencent.com             inference  preset
+api.minimax.io                          inference  preset
+api.minimaxi.com                        inference  preset
+api.mistral.ai                          inference  preset
+api.moonshot.ai                         inference  preset
+api.moonshot.cn                         inference  preset
+api.novita.ai                           inference  preset
+api.openai.com                          inference  preset
+api.siliconflow.cn                      inference  preset
+api.siliconflow.com                     inference  preset
+api.x.ai                                inference  preset
+api.xiaomimimo.com                      inference  preset
+ark.cn-beijing.volces.com               inference  preset
+dashscope.aliyuncs.com                  inference  preset
+generativelanguage.googleapis.com       inference  preset
+ollama.com                              inference  preset
+open.bigmodel.cn                        inference  preset
+qianfan.baidubce.com                    inference  preset
+spark-api-open.xf-yun.com               inference  preset
+token-plan.cn-beijing.maas.aliyuncs.com inference  preset
+tokenhub.tencentmaas.com                inference  preset
+
+api.npmjs.org                           disabled   pages/src/hooks/useNpmDownloads.ts returns before the fetch (dead code in the bundle)
+img.shields.io                          disabled   badge URLs in post-review-comments.js; the posting step is off in action.yml
+registry.npmjs.org                      disabled   scripts/update.js exits immediately; launcher forces OCR_NO_UPDATE
+openaipublic.blob.core.windows.net      disabled   tiktoken URLs mapped to embedded files, never fetched (internal/llm/embedded_loader.go)
+backend.example.com                     disabled   example in a comment of the compiled-out exporter.go
+
+api.github.com                          install    install.sh / install.ps1 release lookup (user-initiated)
+github.com                              install    release downloads, repo links and help text
+open-codereview.ai                      install    install one-liners shown as text
+
+cursor.com                              text       doc link in a CI contract check message
+docs.github.com                         text       doc link in a comment
+docs.mistral.ai                         text       doc link in a comment
+gateway.internal.com                    text       example in `ocr config` help
+gist.github.com                         text       reference link in a comment
+json.schemastore.org                    text       SARIF $schema value, never fetched
+opencode.ai                             text       doc link in a comment
+www.w3.org                              text       SVG/XML namespace identifiers

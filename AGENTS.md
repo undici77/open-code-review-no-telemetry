@@ -53,3 +53,7 @@ open-code-review (`ocr`) is an AI-powered code review CLI tool written in Go (mo
   - docs/i18n/README.ja-JP.md
   - docs/i18n/README.ko-KR.md
   - docs/i18n/README.ru-RU.md
+
+## No-Telemetry Fork
+
+- This is a no-telemetry fork. Before any change or upstream merge, read and follow `NO_TELEMETRY_GUIDELINES.md`; privacy rules there override everything else in this file. <!-- [no-telemetry fork] -->

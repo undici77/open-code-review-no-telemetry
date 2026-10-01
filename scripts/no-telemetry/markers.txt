@@ -1,0 +1,20 @@
+# No-telemetry fork: expected count of "[no-telemetry fork]" tags per upstream
+# file (path:count, as printed by `git grep -c`). verify.sh fails when the
+# actual inventory differs. Update this file in the same commit as the hook.
+AGENTS.md:1
+.gitattributes:1
+action.yml:4
+bin/ocr.js:1
+cmd/opencodereview/main_test.go:1
+internal/telemetry/exporter.go:1
+internal/telemetry/exporter_test.go:1
+internal/telemetry/provider.go:1
+internal/telemetry/provider_test.go:1
+internal/tool/code_search.go:1
+internal/tool/file_find.go:1
+internal/tool/filereader.go:2
+internal/viewer/server.go:1
+pages/index.html:1
+pages/src/hooks/useNpmDownloads.ts:2
+pages/src/index.html.test.ts:1
+scripts/update.js:1
