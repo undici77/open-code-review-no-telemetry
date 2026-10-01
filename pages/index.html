@@ -55,8 +55,7 @@
   </style>
 
   <link rel="icon" type="image/svg+xml" href="<%= require('./logo.svg') %>" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- [no-telemetry fork] fonts and icons are self-hosted under public/self-hosted/ (scripts/no-telemetry/self-host-web-assets.sh); no third-party CDN. -->
   <!-- Loaded without blocking first paint: `media="print"` does not match the
        screen, so the browser fetches these without holding up rendering, and the
        onload handler switches them on once they arrive. Otherwise the two CDN
@@ -65,11 +64,11 @@
        Font Awesome icons only appear well below the fold (WhySection).
        The <noscript> copies keep both stylesheets render-blocking-but-applied
        when scripting is off, since the onload swap cannot run there. -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" media="print" onload="this.media='all'" />
+  <link href="/self-hosted/fonts/fonts.css" rel="stylesheet" media="print" onload="this.media='all'" />
+  <link rel="stylesheet" href="/self-hosted/font-awesome/css/all.min.css" media="print" onload="this.media='all'" />
   <noscript>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="/self-hosted/fonts/fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/self-hosted/font-awesome/css/all.min.css" />
   </noscript>
 </head>
 <body>

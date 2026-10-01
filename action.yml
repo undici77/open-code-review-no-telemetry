@@ -114,7 +114,7 @@ inputs:
       literal string 'true' or 'false' (quoted); the step gates on a string
       comparison, so an unquoted YAML boolean will not match.
     required: false
-    default: 'true'
+    default: 'false' # [no-telemetry fork] results stay in the job log unless the caller opts in
   sticky_summary:
     description: >-
       Summary dimension. true = update an existing summary comment in place
@@ -449,6 +449,7 @@ runs:
       env:
         OCR_VERSION: ${{ inputs.ocr_version }}
       run: |
+        echo "OCR_NO_UPDATE=1" >> "$GITHUB_ENV" # [no-telemetry fork] keep the pinned version, never self-update
         npm install -g "@alibaba-group/open-code-review@${OCR_VERSION}"
         echo "OpenCodeReview installed:"
         OCR_VERSION_OUTPUT="$(ocr version 2>/dev/null)" || {
@@ -572,7 +573,7 @@ runs:
         ocr config set language "$OCR_LANGUAGE"
 
     - name: Resolve review range
-      if: inputs.checkpoint_range == 'true'
+      if: ${{ false && inputs.checkpoint_range == 'true' }} # [no-telemetry fork] no GitHub API calls
       id: range
       uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
       env:
@@ -895,7 +896,7 @@ runs:
         exit "${OCR_EXIT_CODE}"
 
     - name: Post review comments
-      if: env.OCR_EXIT_CODE == '0'
+      if: ${{ false && env.OCR_EXIT_CODE == '0' }} # [no-telemetry fork] no GitHub API writes; results are in the job log
       id: post
       uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
       env:

@@ -84,7 +84,7 @@ describe('index.html critical CSS', () => {
       name: 'falls back to blocking stylesheets when scripting is off',
       assert: () => {
         const noscript = markup.match(/<noscript>([\s\S]*?)<\/noscript>/)?.[1] ?? '';
-        expect(noscript).toContain('fonts.googleapis.com');
+        expect(noscript).toContain('/self-hosted/fonts/fonts.css'); // [no-telemetry fork]
         expect(noscript).toContain('font-awesome');
         expect(noscript).not.toMatch(/media="print"/);
       },

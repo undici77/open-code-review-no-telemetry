@@ -6,3 +6,8 @@
 *.gif binary
 *.ico binary
 *.tiktoken binary
+
+# [no-telemetry fork] self-hosted web fonts under pages/public/self-hosted/
+*.woff binary
+*.woff2 binary
+*.ttf binary

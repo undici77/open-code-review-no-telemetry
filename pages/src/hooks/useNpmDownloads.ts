@@ -28,7 +28,8 @@ export function useNpmDownloads(pkg: string, period: Period = 'last-month'): Npm
 
   useEffect(() => {
     let cancelled = false;
-    setState({ downloads: null, loading: true, error: false });
+    setState({ downloads: null, loading: false, error: true }); // [no-telemetry fork] no api.npmjs.org request
+    if (!cancelled) return; // [no-telemetry fork] always true here: stop before the fetch below
 
     // On a slow network or an unresponsive API, abort the request after a timeout and degrade,
     // so the UI does not stay stuck in the loading state indefinitely

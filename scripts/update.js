@@ -5,6 +5,8 @@
 
 "use strict";
 
+process.exit(0); // [no-telemetry fork] self-update is disabled: no npm registry lookup, no `npm i -g`
+
 const fs = require("fs");
 const path = require("path");
 const os = require("os");

@@ -64,6 +64,8 @@ if (require.main !== module) {
   return;
 }
 
+process.env.OCR_NO_UPDATE = "1"; // [no-telemetry fork] never check the npm registry or self-update
+
 const resolved = resolveNativeBinary();
 if (!resolved) {
   console.error(
