@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 alibaba/open-code-review Contributors
 
+// [no-telemetry fork] asserts upstream telemetry flushing; inverted in notelemetry_test.go.
+//go:build ignore
+
 package main
 
 import (

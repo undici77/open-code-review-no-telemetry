@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 alibaba/open-code-review Contributors
 
+// [no-telemetry fork] OTel SDK/exporter code compiled out; see noop_notelemetry.go.
+//go:build ignore
+
 package telemetry
 
 import (
