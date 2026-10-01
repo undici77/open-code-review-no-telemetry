@@ -69,6 +69,9 @@ type FileReader struct {
 // - Workspace: reads directly from the filesystem.
 // - Range / Commit: uses `git show <Ref>:<path>` to read at the given ref.
 func (fr *FileReader) Read(ctx context.Context, path string) (string, error) {
+	if err := secretGuard(path); err != nil { // [no-telemetry fork]
+		return "", err
+	}
 	switch fr.Mode {
 	case ModeWorkspace:
 		return fr.readFromDisk(path)
@@ -140,6 +143,9 @@ func (fr *FileReader) readFromGitShow(parentCtx context.Context, path string) (s
 // ReadLines returns a window of lines from the file plus the total line count.
 // startLine is 1-based; maxLines is the maximum number of lines to collect.
 func (fr *FileReader) ReadLines(ctx context.Context, path string, startLine, maxLines int) ([]string, int, error) {
+	if err := secretGuard(path); err != nil { // [no-telemetry fork]
+		return nil, 0, err
+	}
 	switch fr.Mode {
 	case ModeWorkspace:
 		return fr.readLinesFromDisk(path, startLine, maxLines)

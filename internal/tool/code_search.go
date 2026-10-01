@@ -207,6 +207,9 @@ func (p *CodeSearchProvider) gitGrep(ctx context.Context, searchText string, cas
 			continue
 		}
 		fname := parts[offset]
+		if isSecretToolPath(fname) { // [no-telemetry fork]
+			continue
+		}
 		m := match{}
 		ln, parseErr := strconv.Atoi(parts[offset+1])
 		if parseErr != nil {

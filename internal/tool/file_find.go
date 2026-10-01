@@ -54,6 +54,8 @@ func (p *FileFindProvider) Execute(ctx context.Context, args map[string]any) (st
 		queryCmp = strings.ToLower(query)
 	}
 
+	files = dropSecretPaths(files) // [no-telemetry fork]
+
 	// 1. First pass: match against base filename (maintains precision for pure filename queries).
 	var matched []string
 	for _, f := range files {

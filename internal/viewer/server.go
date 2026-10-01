@@ -22,6 +22,7 @@ var assets embed.FS
 // of OpenAuto, OpenAlways or OpenNever; callers should have run
 // ValidateOpenMode first, and anything unrecognized behaves as OpenAuto.
 func StartServer(addr, openMode string) error {
+	addr = loopbackOnly(addr) // [no-telemetry fork]
 	root, err := SessionsRoot()
 	if err != nil {
 		return fmt.Errorf("resolve sessions root: %w", err)
