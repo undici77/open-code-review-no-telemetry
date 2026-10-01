@@ -259,7 +259,7 @@ ocr config set telemetry.exporter console
 ocr review
 ```
 
-LLM 调用没有自己的 span——它们记为 metric。关注 `ocr.llm.tokens_used`
+主评审循环中的 LLM 调用会产生 `llm.request` span，同时记录为 metric。关注 `ocr.llm.tokens_used`
 （counter，标 `model` + `type`）、`ocr.llm.requests_total`（counter，标 `model`
 + `status`）、`ocr.llm.request_duration_seconds`（histogram，标 `model`）。
 console exporter 会内联打印这些聚合。如需仪表盘，切换到 OTLP exporter 并发到你的
@@ -325,7 +325,7 @@ issue 已在[此](https://github.com/alibaba/open-code-review/issues)开放。
 
 ### 为什么二进制叫 `opencodereview` 而 CLI 是 `ocr`？
 
-release 中发布的静态二进制以项目命名（`opencodereview`）；NPM wrapper 为了便于使用而安装为 `ocr`。从源码构建得到 `dist/opencodereview`——复制为 `$PATH` 上的
+release 中发布的静态二进制以项目命名（`opencodereview`）；NPM wrapper 为了便于使用而安装为 `ocr`。从源码构建得到 `dist/opencodereview`（Windows 上是 `dist/opencodereview.exe`）——复制为 `$PATH` 上的
 `ocr`。
 
 ### 如何卸载？

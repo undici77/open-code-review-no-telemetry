@@ -31,6 +31,7 @@ qianfan.baidubce.com                    inference  preset
 spark-api-open.xf-yun.com               inference  preset
 token-plan.cn-beijing.maas.aliyuncs.com inference  preset
 tokenhub.tencentmaas.com                inference  preset
+openrouter.ai                           inference  preset (added upstream with #1522)
 
 api.npmjs.org                           disabled   pages/src/hooks/useNpmDownloads.ts returns before the fetch (dead code in the bundle)
 img.shields.io                          disabled   badge URLs in post-review-comments.js; the posting step is off in action.yml
@@ -49,4 +50,6 @@ gateway.internal.com                    text       example in `ocr config` help
 gist.github.com                         text       reference link in a comment
 json.schemastore.org                    text       SARIF $schema value, never fetched
 opencode.ai                             text       doc link in a comment
+plugins.jetbrains.com                   text       doc links in JetBrains plugin comments
 www.w3.org                              text       SVG/XML namespace identifiers
+api.example.com                         text       placeholder in the extension config form

@@ -2,7 +2,6 @@
 # file (path:count, as printed by `git grep -c`). verify.sh fails when the
 # actual inventory differs. Update this file in the same commit as the hook.
 AGENTS.md:1
-.gitattributes:1
 action.yml:4
 bin/ocr.js:1
 cmd/opencodereview/main_test.go:1
@@ -17,4 +16,6 @@ internal/viewer/server.go:1
 pages/index.html:1
 pages/src/hooks/useNpmDownloads.ts:2
 pages/src/index.html.test.ts:1
+scripts/add-license.sh:1
 scripts/update.js:1
+scripts/verify-license.sh:1

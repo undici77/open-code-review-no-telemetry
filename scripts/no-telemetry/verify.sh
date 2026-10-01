@@ -12,6 +12,7 @@
 # Exit codes: 0 clean, 1 a check failed, 2 the egress detector itself is broken.
 
 set -euo pipefail
+export LC_ALL=C # stable sort order for comm
 
 ROOT="$(git rev-parse --show-toplevel)"
 HERE="$ROOT/scripts/no-telemetry"
@@ -64,7 +65,9 @@ fi
 section "3. hard-coded hosts in runtime code (reviewed: $HERE/known-hosts.txt)"
 hosts="$(git grep -hoE 'https?://[A-Za-z0-9.-]+\.[A-Za-z]{2,}' -- \
   'internal/*.go' 'cmd/*.go' 'bin/*.js' 'scripts/*.js' 'scripts/*.sh' \
-  'extensions/vscode/src/*.ts' 'plugins/*.ts' 'plugins/*.js' \
+  'extensions/vscode/src/*.ts' 'extensions/frontend/src/*.ts' 'extensions/frontend/src/*.tsx' \
+  'extensions/idea/src/main/*.kt' 'extensions/idea/src/main/*.java' 'extensions/idea/src/main/*.xml' \
+  'plugins/*.ts' 'plugins/*.js' \
   'pages/src/*.ts' 'pages/src/*.tsx' 'pages/index.html' \
   'install.sh' 'install.ps1' 'action.yml' \
   ':!*_test.go' ':!*.test.js' ':!*.test.ts' ':!*.test.tsx' ':!*.test.mjs' \

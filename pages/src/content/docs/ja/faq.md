@@ -280,7 +280,7 @@ ocr config set telemetry.exporter console
 ocr review
 ```
 
-LLM 呼び出しには独自の span がありません——metric として記録されます。`ocr.llm.tokens_used`
+メインレビュー ループの LLM 呼び出しは `llm.request` span を生成し、metric としても記録されます。`ocr.llm.tokens_used`
 （counter、`model` + `type` でラベル付け）、`ocr.llm.requests_total`（counter、`model`
 + `status` でラベル付け）、`ocr.llm.request_duration_seconds`（histogram、`model` でラベル付け）に
 注目してください。console exporter はこれらの集計をインラインで出力します。ダッシュボードが必要な場合は、
@@ -355,7 +355,7 @@ provider が必要です。Hg サポートの issue は[こちら](https://githu
 ### なぜバイナリは `opencodereview` なのに CLI は `ocr` なのか？
 
 release で配布される静的バイナリはプロジェクト名（`opencodereview`）を持ちます。NPM wrapper は
-使いやすさのため `ocr` としてインストールされます。ソースからビルドすると `dist/opencodereview` が
+使いやすさのため `ocr` としてインストールされます。ソースからビルドすると `dist/opencodereview`（Windows では `dist/opencodereview.exe`）が
 得られます——`$PATH` 上の `ocr` としてコピーしてください。
 
 ### アンインストールするには？

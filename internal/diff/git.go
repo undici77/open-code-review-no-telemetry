@@ -6,6 +6,7 @@ package diff
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"net/url"
 	"os"
@@ -633,6 +634,24 @@ func (p *Provider) workspaceTrackedDiff(ctx context.Context) (string, string, er
 	return p.runGitSplit(ctx, "-c", "core.quotepath=false", "diff", "--no-ext-diff", "--no-textconv", "--find-renames", "--src-prefix=a/", "--dst-prefix=b/", "--no-color", "-U"+fmt.Sprint(DiffContextLines), "--staged", "--")
 }
 
+// binarySniffWindow is the number of leading bytes inspected when deciding
+// whether an untracked file is binary. Matches git's own heuristic and the
+// scan provider's sniff window.
+const binarySniffWindow = 8000
+
+// looksBinary reports whether content contains a NUL byte within the sniff
+// window — the same marker git uses to report a file as binary.
+func looksBinary(content []byte) bool {
+	if len(content) > binarySniffWindow {
+		content = content[:binarySniffWindow]
+	}
+	return bytes.IndexByte(content, 0) >= 0
+}
+
+func untrackedBinaryDiff(path string) string {
+	return fmt.Sprintf("diff --git a/%s b/%s\nnew file mode 100644\nBinary files /dev/null and b/%s differ\n", path, path, path)
+}
+
 func (p *Provider) untrackedFileDiffs(ctx context.Context) ([]string, error) {
 	files, err := p.untrackedFilesList(ctx)
 	if err != nil {
@@ -641,8 +660,20 @@ func (p *Provider) untrackedFileDiffs(ctx context.Context) ([]string, error) {
 
 	var results []string
 	for _, f := range files {
-		content, rerr := readWorkspaceFileForDiff(p.repoDir, f)
+		content, rerr := readWorkspaceFileForDiffWithLimit(p.repoDir, f, maxUntrackedFileSize)
+		if errors.Is(rerr, errWorkspaceFileTooLarge) {
+			results = append(results, untrackedBinaryDiff(f))
+			continue
+		}
 		if rerr != nil {
+			continue
+		}
+
+		if looksBinary(content) {
+			// Emit git's own binary marker so the parser flags the file and
+			// the selection layer excludes it, matching the tracked path where
+			// `git diff` itself reports "Binary files ... differ".
+			results = append(results, untrackedBinaryDiff(f))
 			continue
 		}
 
@@ -672,7 +703,13 @@ func (p *Provider) untrackedFileDiffs(ctx context.Context) ([]string, error) {
 }
 
 func (p *Provider) untrackedFilesList(ctx context.Context) ([]string, error) {
-	out, stderr, err := p.runGitSplit(ctx, "-c", "core.quotepath=false", "ls-files", "--others", "--exclude-standard")
+	// -z, and no trimming of the records it produces. Without it git quotes
+	// any pathname holding a tab, a newline, a quote or a backslash, so the
+	// name arrives escaped and matches nothing on disk; a newline in a name
+	// also splits one file into two entries. Trimming then removes leading and
+	// trailing spaces, which are filename bytes. Each of those drops an
+	// untracked file out of the review with no error.
+	out, stderr, err := p.runGitSplit(ctx, "-c", "core.quotepath=false", "ls-files", "-z", "--others", "--exclude-standard")
 	if err != nil {
 		return nil, gitFailure("git ls-files", stderr, err)
 	}
@@ -681,13 +718,12 @@ func (p *Provider) untrackedFilesList(ctx context.Context) ([]string, error) {
 	}
 	patterns := p.loadGitignorePatterns()
 	var files []string
-	for _, line := range strings.Split(strings.TrimSpace(out), "\n") {
-		line = strings.TrimSpace(line)
-		if line == "" {
+	for _, name := range strings.Split(strings.TrimRight(out, "\x00"), "\x00") {
+		if name == "" {
 			continue
 		}
-		if !p.isPathExcluded(line, patterns) {
-			files = append(files, line)
+		if !p.isPathExcluded(name, patterns) {
+			files = append(files, name)
 		}
 	}
 	return files, nil

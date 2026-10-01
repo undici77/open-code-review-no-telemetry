@@ -68,6 +68,7 @@ function getInstalledVersion(binPath) {
     const result = spawnSync(binPath, ["version"], {
       encoding: "utf8",
       timeout: 3000,
+      windowsHide: true,
     });
     return parseVersionOutput(result.stdout);
   } catch (_) {
@@ -156,6 +157,7 @@ async function main() {
       encoding: "utf8",
       timeout: 120000,
       shell: IS_WINDOWS,
+      windowsHide: true,
     });
 
     if (result.status === 0) {

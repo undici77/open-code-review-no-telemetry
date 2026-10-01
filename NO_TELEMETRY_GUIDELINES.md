@@ -95,7 +95,7 @@ The secret patterns come from upstream's `internal/config/allowlist/default_secr
 | `pages/src/hooks/useNpmDownloads.ts` | Returns before `fetch(api.npmjs.org)` |
 | `pages/src/index.html.test.ts` | Asserts the self-hosted URL instead of Google Fonts |
 | `action.yml` | Checkpoint lookup and comment posting `if: false`; `upload_artifacts` default `'false'`; `OCR_NO_UPDATE=1` exported for every step |
-| `.gitattributes` | `*.woff`, `*.woff2`, `*.ttf` marked binary |
+| `scripts/verify-license.sh`, `scripts/add-license.sh` | `self-hosted/` ignored: third-party font/icon CSS keeps its own license, no Apache header |
 | `AGENTS.md` | Points AI agents to this file |
 
 Upstream `.github/workflows/*` are left unedited. **Disable GitHub Actions** for the publish and Pages-deploy workflows in the fork's repository settings.
@@ -104,9 +104,10 @@ Upstream `.github/workflows/*` are left unedited. **Disable GitHub Actions** for
 
 | Item | Reason |
 |---|---|
-| `install.sh`, `install.ps1`, npm `postinstall`, VS Code "Install" button | User-initiated, checksum-verified. ⚠️ They install the **upstream** binary, so only `make build` from `dev` gives the fork's protections |
+| `install.sh`, `install.ps1`, npm `postinstall`, VS Code / JetBrains "Install" buttons | User-initiated, checksum-verified. ⚠️ They install the **upstream** binary, so only `make build` from `dev` gives the fork's protections |
 | Fallback to `ANTHROPIC_*` env and shell rc files | Still points at an inference server |
 | MCP client | User-configured only; no default servers are shipped |
+| JetBrains plugin (`extensions/idea`) and shared webview (`extensions/frontend`) | Audited on the merge that brought them in: they only spawn `ocr`/git/npm locally, inline their webview bundle, and register no usage collectors or error reporters |
 | Local session and raw logs in `~/.opencodereview/` | Local only, `0600`/`0700` permissions, credential headers redacted |
 
 ## Branches and merge procedure
@@ -133,6 +134,7 @@ git checkout dev  && git merge --no-ff main
 | A build-tag-excluded file | Take upstream's body (`--theirs`) and keep the 3-line `//go:build ignore` header |
 | `go.mod` / `go.sum` | Take upstream's version, then run `make check` (it runs `go mod tidy` and drops the exporters again) |
 | Shim fails to compile (`undefined: telemetry.X`) | Upstream added API: add a no-op `X` to `noop_notelemetry.go` and never re-enable the SDK |
+| Need to test something mid-merge | **Never `git stash` during a merge**: it drops `MERGE_HEAD`. Commit the merge first, or use a separate worktree |
 | Anything that would re-introduce egress | **Privacy wins.** Mock it with technique 1–3, even if that diverges from upstream |
 
 ## Post-merge checklist
